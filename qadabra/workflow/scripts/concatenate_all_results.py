@@ -39,7 +39,7 @@ for index, row in qadabra_all_result.iterrows():
                 qadabra_all_result.at[index, col] = "p<0.05"
             else:
                 qadabra_all_result.at[index, col] = "ns"
-    qadabra_all_result.at[index, "# of tools p > 0.05"] = count
+    qadabra_all_result.at[index, "# of tools p < 0.05"] = count
 
 
 qadabra_all_result.to_csv(snakemake.output[0], sep="\t", index=True)
