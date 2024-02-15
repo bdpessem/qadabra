@@ -38,11 +38,18 @@ specify.reference <- paste(covariate, reference, sep = ",", collapse = ",")
 
 # Run maAsLin
 print("Running MaAsLin...")
+#comments: 
+# 1. random_effects can include the random effects for the model fi. random_effects="site,subject" --> request user to specify the subjectID in the metadata
+# 2. normalization is default set to TSS
+# 3. transformation is default set to log
+# 4. correction method for computing q-value (or adjusted p-value) is set to BH, you can extract the q-value and don't need to perform the calculation later
+
 fit.data <- Maaslin2::Maaslin2(
     input_data=table,
     input_metadata=metadata,
     output=snakemake@output[["out_dir"]],
     fixed_effects=fixed.effects,
+    random_effects=random.effects,
     reference=specify.reference,
     min_prevalence=0,
     min_abundance=0,
