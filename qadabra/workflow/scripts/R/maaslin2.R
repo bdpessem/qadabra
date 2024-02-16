@@ -21,6 +21,9 @@ covariate <- snakemake@params[[1]][["factor_name"]]
 target <- snakemake@params[[1]][["target_level"]]
 reference <- snakemake@params[[1]][["reference_level"]]
 confounders <- snakemake@params[[1]][["confounders"]]
+#comments: 
+#1. extract random-effects subjectID and/or site from metadata
+random.effects <- snakemake@params[[1]][["random_effects"]]
 
 # Harmonize table and metadata samples
 print("Harmonizing table and metadata samples...")
@@ -35,6 +38,8 @@ row.names(table) <- paste0("F_", row.names(table)) # Append F_ to features to av
 table <- t(table[, sample_order])
 fixed.effects <- c(covariate, confounders)
 specify.reference <- paste(covariate, reference, sep = ",", collapse = ",")
+
+
 
 # Run maAsLin
 print("Running MaAsLin...")
@@ -66,6 +71,9 @@ results <- results %>% select(-c("feature"))
 adjusted_p_values <- p.adjust(results$pval, method = "BH")
 results$pval_BH_adj <- adjusted_p_values
 # results$coef <- results$coef
+
+#comment 4. alternative method 
+results$qval <-adjusted_p_values
 
 # Save results to output file
 write.table(results, file=snakemake@output[["diff_file"]], sep="\t")

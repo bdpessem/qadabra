@@ -28,6 +28,23 @@ module qadabra:
 use rule * from qadabra
 """
 
+def validate_random_effects(random_effects, metadata_file):
+    if not random_effects:
+        return  # No need for validation if random_effects is empty
+    
+    # Split and strip random_effects
+    random_effects_list = [effect.strip() for effect in random_effects.split(',') if effect.strip()]
+    
+    # Read metadata file to obtain column names
+    metadata_df = pd.read_csv(metadata_file, sep='\t')
+    metadata_columns = metadata_df.columns
+    
+    # Check if each random effect corresponds to a column in the metadata
+    for effect in random_effects_list:
+        if effect not in metadata_columns:
+            raise ValueError(f"Random effect '{effect}' is not found in the metadata columns.")
+
+
 
 @click.group()
 @click.version_option(__version__)
@@ -99,6 +116,15 @@ def qadabra():
     default=True,
     help="Whether to validate input prior to adding dataset"
 )
+
+#add option
+@click.option(
+    "--random-effects",
+    type=str,
+    required=False,
+    help="The random effects for the model, comma-delimited for multiple effects (subjectID, site)"
+)
+
 @click.option(
     "--verbose",
     is_flag=True,
@@ -117,6 +143,7 @@ def add_dataset(
     reference_level,
     confounder,
     validate_input,
+    random_effects,
     verbose
 ):
     """Add dataset on which to run Qadabra"""
@@ -147,6 +174,9 @@ def add_dataset(
         logger.info("Validating input...")
         _validate_input(logger, table, metadata, factor_name, target_level,
                         reference_level, tree, confounder)
+    
+    # Validate random effects
+    validate_random_effects(random_effects, metadata)
 
     dataset_sheet = pathlib.Path(dataset_sheet)
     new_ds = pd.Series({

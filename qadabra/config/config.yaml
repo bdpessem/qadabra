@@ -1,21 +1,21 @@
 stylesheet: "config/qadabra.mplstyle"
 tools:
-    - deseq2
-    - ancombc
-    - songbird
-    - aldex2
-    - edger
+    #- deseq2
+    #- ancombc
+    #- songbird
+    #- aldex2
+    #- edger
     - maaslin2
-    - metagenomeseq
-    - corncob
+    #- metagenomeseq
+    #- corncob
 ptools:
-    - deseq2
-    - ancombc
-    - aldex2
-    - edger
+    #- deseq2
+    #- ancombc
+    #- aldex2
+    #- edger
     - maaslin2
-    - metagenomeseq
-    - corncob
+    #- metagenomeseq
+    #- corncob
 songbird_params:
     epochs: 5000
     differential_prior: 1
